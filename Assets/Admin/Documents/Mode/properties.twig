@@ -1,0 +1,63 @@
+<rbs-field-label-title property="title" required="true"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'label'), ['ucf']) }} / {{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'title'), ['ucf']) }}">
+</rbs-field-label-title>
+
+<rbs-field-text property="code"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'code'), ['ucf']) }}">
+</rbs-field-text>
+
+<rbs-field-text property="vendorcode" required="true"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'vendorcode'), ['ucf']) }}">
+</rbs-field-text>
+
+<rbs-field-text property="vendorprivatekey" required="true"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'vendorprivatekey'), ['ucf']) }}">
+</rbs-field-text>
+
+<rbs-field-integer property="delay"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'delay'), ['ucf']) }}">
+</rbs-field-integer>
+
+<rbs-field-integer property="searchradius"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'searchradius'), ['ucf']) }}">
+</rbs-field-integer>
+
+<rbs-field-rich-text property="description"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'description'), ['ucf']) }}">
+</rbs-field-rich-text>
+
+<rbs-field-picker property="visual"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'visual'), ['ucf']) }}"
+	accepted-model="Rbs_Media_Image"
+	selector-title="{{ i18nAttr('m.rbs.shipping.admin.mode_select_visual', ['ucf']) }}">
+</rbs-field-picker>
+
+<rbs-field label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'cartFilterData'), ['ucf']) }}">
+	<div data-rbs-document-filter-container="" data-filter="document.cartFilterData">
+		<div data-rbs-cart-filter-definitions=""></div>
+	</div>
+</rbs-field>
+
+<rbs-field-picker-multiple property="deliveryZones"
+	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'deliveryZones'), ['ucf']) }}"
+	accepted-model="Rbs_Geo_Zone">
+</rbs-field-picker-multiple>
+
+<rbs-field label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'trackingUrlTemplate'), ['ucf']) }}">
+	<div class="input-group">
+		<input type="text" class="form-control" data-ng-model="document.trackingUrlTemplate" />
+		<div class="input-group-btn">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				{{ i18n('m.rbs.shipping.admin.variables', ['ucf']) }} <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu pull-right">
+				<li>
+					<a href="" data-ng-click="addVariable('trackingUrlTemplate', 'CODE')">
+						{CODE} ({{ i18nAttr(propertyKey('Rbs_Order_Shipment', 'trackingCode')) }})
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</rbs-field>
+

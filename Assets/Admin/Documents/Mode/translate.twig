@@ -1,0 +1,40 @@
+<div class="row" data-rbs-document-editor-base="" data-model="Rbs_Mondialrelay_Mode">
+	<div class="col-md-12">
+		<rbs-page-header sub-title="{{ i18nAttr(modelKey('Rbs_Mondialrelay_Mode'), ['ucf']) }}"></rbs-page-header>
+	</div>
+
+	<div data-rbs-aside-column="">
+		{% include '@Rbs_Admin/view/asides.twig' %}
+		{% include '@Rbs_Admin/view/links.twig' %}
+	</div>
+
+	<div class="document-form" data-rbs-main-column="">
+		<form data-ng-submit="submit()" data-rbs-document-editor-edit="" data-rbs-document-editor-translate=""
+			data-rbs-document-editor-rbs-shipping-mode-translate=""
+			data-rbs-document-editor-rbs-mondialrelay-mode-translate="">
+			<fieldset data-rbs-editor-section=""
+				data-editor-section-label="{{ i18nAttr('m.rbs.admin.admin.general_properties', ['ucf']) }}">
+
+				<rbs-field-text property="title" required="true"
+					label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'title'), ['ucf']) }}">
+				</rbs-field-text>
+
+				<rbs-field-rich-text property="description"
+					label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'description'), ['ucf']) }}">
+				</rbs-field-rich-text>
+			</fieldset>
+
+			<fieldset data-rbs-editor-section="activation"
+				data-editor-section-label="{{ i18nAttr('m.rbs.admin.admin.activation_properties', ['ucf']) }}"
+				data-rbs-document-activation-section="">
+			</fieldset>
+
+			<fieldset data-rbs-editor-section="systeminfo"
+				data-editor-section-label="{{ i18nAttr('m.rbs.admin.adminjs.status', ['ucf']) }}"
+				data-rbs-document-system-info-section="">
+			</fieldset>
+
+			<rbs-document-editor-button-bar></rbs-document-editor-button-bar>
+		</form>
+	</div>
+</div>

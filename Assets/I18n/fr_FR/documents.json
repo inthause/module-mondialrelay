@@ -1,0 +1,17 @@
+{
+	"mode":{
+		"message":"mode Mondial relay"
+	},
+	"mode_vendorcode":{
+		"message":"code commerçant"
+	},
+	"mode_vendorprivatekey":{
+		"message":"clé privée"
+	},
+	"mode_delay":{
+		"message":"délai d'expédition"
+	},
+	"mode_searchradius":{
+		"message":"distance de recherche (km)"
+	}
+}

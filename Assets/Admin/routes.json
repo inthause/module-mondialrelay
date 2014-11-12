@@ -1,0 +1,51 @@
+{
+	"/Rbs/Mondialrelay/": {
+		"module": "Rbs_Mondialrelay",
+		"name": "home",
+		"rule": {
+			"redirectTo": "/404"
+		},
+		"auto": true
+	},
+	"/Rbs/Commerce/Mondialrelaymode/": {
+		"model": "Rbs_Mondialrelay_Mode",
+		"name": "list",
+		"rule": {
+			"redirectTo": "/Rbs/Commerce/Mode/",
+			"labelKey": "m.rbs.shipping.admin.mode_list | ucf"
+		},
+		"auto": false
+	},
+	"/Rbs/Mondialrelay/Mode/:id":false,
+	"/Rbs/Mondialrelay/Mode/new": false,
+	"/Rbs/Mondialrelay/Mode/:id/translate/:LCID":false,
+	"/Rbs/Commerce/Mondialrelaymode/:id": {
+		"model": "Rbs_Mondialrelay_Mode",
+		"name": "edit",
+		"rule": {
+			"templateUrl": "Document/Rbs/Mondialrelay/Mode/edit.twig",
+			"labelKey": "m.rbs.mondialrelay.documents.mondialrelaymode | ucf",
+			"labelId": "id"
+		},
+		"auto": false
+	},
+	"/Rbs/Commerce/Mondialrelaymode/new": {
+		"model": "Rbs_Mondialrelay_Mode",
+		"name": "new",
+		"rule": {
+			"templateUrl": "Document/Rbs/Mondialrelay/Mode/new.twig",
+			"labelKey": "m.rbs.admin.adminjs.new_resource | ucf"
+		},
+		"auto": false
+	},
+	"/Rbs/Commerce/Mondialrelaymode/:id/translate/:LCID": {
+		"model": "Rbs_Mondialrelay_Mode",
+		"name": "translate",
+		"rule": {
+			"templateUrl": "Document/Rbs/Mondialrelay/Mode/translate.twig",
+			"controller": "RbsChangeTranslateEditorController",
+			"labelKey": "m.rbs.admin.admin.translation | ucf"
+		},
+		"auto": false
+	}
+}

@@ -1,0 +1,48 @@
+{
+	"city":{
+		"message":"ville"
+	},
+	"zipcode":{
+		"message":"code postal"
+	},
+	"country":{
+		"message":"pays"
+	},
+	"search":{
+		"message":"chercher"
+	},
+	"locate_me":{
+		"message":"autour de ma position"
+	},
+	"no_data":{
+		"message":"aucun point relais à afficher"
+	},
+	"please_wait_loading":{
+		"message":"chargement des relais en cours."
+	},
+	"localisation_in_progress":{
+		"message":"localisation en cours"
+	},
+	"schedule":{
+		"message":"horaires"
+	},
+	"picture":{
+		"message":"photo"
+	},
+	"closed":{
+		"message":"fermé"
+	},
+	"info":{
+		"message":"Infos"
+	},
+	"distance":{
+		"message":"distance"
+	},
+	"distance_m":{
+		"message":"m"
+	},
+	"distance_km":{
+		"message":"km"
+	}
+
+}

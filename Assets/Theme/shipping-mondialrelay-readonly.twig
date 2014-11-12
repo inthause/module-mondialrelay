@@ -1,0 +1,26 @@
+<div class="row">
+	<div class="col-sm-4">
+		<address>
+			<strong>(= relay.address.__lines[0] =)</strong>
+			<div data-ng-repeat="line in relay.address.__lines track by $index" data-ng-show="!$first">(= line =)</div>
+		</address>
+		<p data-ng-show="relay.options.localisation1">(= relay.options.localisation1 =)</p>
+		<p data-ng-show="relay.options.localisation2">(= relay.options.localisation2 =)</p>
+	</div>
+	<div class="col-sm-4">
+		<table class="table-striped text-center">
+			<tr data-ng-repeat="timeSlot in relay.options.timeSlot">
+				<th>(= timeSlot.dayName =)</th>
+				<td data-ng-show="timeSlot.schedule.length == 0" colspan="2">{{ i18n('m.rbs.mondialrelay.front.closed', ['ucf']) }}</td>
+				<td data-ng-show="timeSlot.schedule.length == 1" colspan="2">(= timeSlot.schedule[0][0] =)-(= timeSlot.schedule[0][1] =)</td>
+				<td data-ng-show="timeSlot.schedule.length > 1 && timeSlot.schedule[0]">(= timeSlot.schedule[0][0] =)-(= timeSlot.schedule[0][1] =)</td>
+				<td data-ng-show="timeSlot.schedule.length > 1 && !timeSlot.schedule[0]">{{ i18n('m.rbs.mondialrelay.front.closed', ['ucf']) }}</td>
+				<td data-ng-show="timeSlot.schedule.length > 1 && timeSlot.schedule[1]">(= timeSlot.schedule[1][0] =)-(= timeSlot.schedule[1][1] =)</td>
+				<td data-ng-show="timeSlot.schedule.length > 1 && !timeSlot.schedule[1]">{{ i18n('m.rbs.mondialrelay.front.closed', ['ucf']) }}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="col-sm-4">
+		<img src="" data-ng-src="(= relay.options.pictureUrl =)" width="182px" style="max-height: 182px"/>
+	</div>
+</div>

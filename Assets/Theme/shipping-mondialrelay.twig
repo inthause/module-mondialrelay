@@ -1,0 +1,109 @@
+<script type="text/ng-template" id="/popinDetail.tpl">
+	<div>
+		<div><strong>(= relay.title =)</strong></div>
+		<div>
+			<ul class="nav nav-tabs">
+				<li class="active"><a data-toggle="tab" href="#tabs-0">{{ i18n('m.rbs.mondialrelay.front.schedule', ['ucf']) }}</a></li>
+				<li><a data-toggle="tab" href="#tabs-1">{{ i18n('m.rbs.mondialrelay.front.picture', ['ucf']) }}</a></li>
+				<li><a data-toggle="tab" href="#tabs-2">{{ i18n('m.rbs.mondialrelay.front.info', ['ucf']) }}</a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="tabs-0" class="tab-pane active">
+					<table class="table-striped text-center">
+						<tr data-ng-repeat="timeSlot in relay.options.timeSlot">
+							<th>(= timeSlot.dayName =)</th>
+							<td data-ng-show="timeSlot.schedule.length == 0" colspan="2">{{ i18n('m.rbs.mondialrelay.front.closed', ['ucf']) }}</td>
+							<td data-ng-show="timeSlot.schedule.length == 1" colspan="2">(= timeSlot.schedule[0][0] =)-(= timeSlot.schedule[0][1] =)</td>
+							<td data-ng-show="timeSlot.schedule.length > 1 && timeSlot.schedule[0]">(= timeSlot.schedule[0][0] =)-(= timeSlot.schedule[0][1] =)</td>
+							<td data-ng-show="timeSlot.schedule.length > 1 && !timeSlot.schedule[0]">{{ i18n('m.rbs.mondialrelay.front.closed', ['ucf']) }}</td>
+							<td data-ng-show="timeSlot.schedule.length > 1 && timeSlot.schedule[1]">(= timeSlot.schedule[1][0] =)-(= timeSlot.schedule[1][1] =)</td>
+							<td data-ng-show="timeSlot.schedule.length > 1 && !timeSlot.schedule[1]">{{ i18n('m.rbs.mondialrelay.front.closed', ['ucf']) }}</td>
+						</tr>
+					</table>
+				</div>
+				<div id="tabs-1" class="tab-pane"><img src="" data-ng-src="(= relay.options.pictureUrl =)" width="182px" style="max-height: 182px"/></div>
+				<div id="tabs-2" class="tab-pane">
+					<p data-ng-show="distance">{{ i18n('m.rbs.mondialrelay.front.distance', ['ucf', 'lab']) }} (= distance =) <span data-ng-show="distanceUnit == 'm'">{{ i18n('m.rbs.mondialrelay.front.distance_m', ['ucf']) }}</span><span data-ng-show="distanceUnit == 'km'">{{ i18n('m.rbs.mondialrelay.front.distance_km', ['ucf']) }}</span></p>
+					<p data-ng-show="relay.options.localisation1">(= relay.options.localisation1 =)</p>
+					<p data-ng-show="relay.options.localisation2">(= relay.options.localisation2 =)</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/ng-template" id="cityTemplate.tpl">
+	<a class="text-left">
+		(= match.model.title =) ((= match.model.zipCode =))
+	</a>
+</script>
+
+<style>
+	.leaflet-map-pane {
+		z-index: 2 !important;
+	}
+
+	.leaflet-google-layer {
+		z-index: 1 !important;
+	}
+</style>
+<div>
+	<div class="row text-center">
+		<div class="col-sm-12">
+			<form class="form-inline">
+
+				<div class="form-group">
+					<label class="sr-only" for="city">{{ i18n('m.rbs.mondialrelay.front.city', ['ucf']) }}</label>
+					<input type="text" id="city" data-ng-model="currentAddress.city" placeholder="{{ i18nAttr('m.rbs.mondialrelay.front.city', ['ucf']) }}"
+						data-typeahead="city.title for city in getLocation($viewValue)" data-typeahead-min-length="3" data-typeahead-loading="loadingLocations"
+						data-typeahead-on-select="updateZipCode($item, $model, $label)" data-typeahead-template-url="cityTemplate.tpl" data-typeahead-wait-ms="500"
+						class="form-control" data-ng-disabled="loading">
+				</div>
+
+				<div class="form-group">
+					<label class="sr-only" for="zipCode">{{ i18n('m.rbs.mondialrelay.front.zipcode', ['ucf']) }}</label>
+					<input type="text" class="form-control" data-ng-model="currentAddress.zipCode" data-ng-disabled="loading"
+						id="zipCode" placeholder="{{ i18nAttr('m.rbs.mondialrelay.front.zipcode', ['ucf']) }}">
+				</div>
+
+				{#<div class="form-group">
+					<label class="sr-only" for="country">{{ i18n('m.rbs.mondialrelay.front.country', ['ucf']) }}</label>
+					<select class="form-control" data-ng-model="currentAddress.country" data-ng-disabled="loading"
+						data-ng-options="country.code as country.title for country in countries"></select>
+				</div>#}
+
+				<button type="submit" data-ng-disabled="loading" data-ng-click="searchWithAddress()"
+					class="btn btn-default btn-primary">{{ i18n('m.rbs.mondialrelay.front.search', ['ucf']) }}</button>
+				<button type="submit" data-ng-disabled="loading" data-ng-click="locateMe()"
+					class="btn btn-default btn-primary">{{ i18n('m.rbs.mondialrelay.front.locate_me', ['ucf']) }}</button>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-4">
+			<div>
+				<div data-ng-show="loading" class="well text-center">
+					<p>{{ i18n('m.rbs.mondialrelay.front.please_wait_loading', ['ucf', 'etc']) | raw }}</p>
+					<img alt=""
+						src="data:image/gif;base64,R0lGODlhGAAYAIQAACQmJJyenNTS1Ozq7GRiZLy+vNze3PT29MzKzDw+PIyKjNza3PTy9GxubMTGxOTm5Pz+/CwqLNTW1Ozu7GRmZMTCxOTi5Pz6/MzOzExOTP///wAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQJCQAaACwAAAAAGAAYAAAF6qAmjho0GcKBUIpzkfAIWU5VFUwB7EnwxiLVbZjbRQCRzAKoYQwLt+Ju2ogdJBeGA1pAHASZ446QZcgQFQxEuziQBooIgeFEQEQWrgDyiy3oNwUWJVtETCIQNVAOJjZQS4ciC1wVE5NcbpEaFwVcCwJDCJojGEMYDBOpZqNNE6h0rhOZo6iuDAJcoqylnQIGlLOHnEMLE08GowtPExeKUZEQT4waeTcCF3dADGtDgyUIBddaBsEXyntadiO3WU8YBwzgneFlMVqUFQwDUE8STCqUcOxztwrIDEUFDuxbZCEbtBMpbhmY4JBECAAh+QQJCQAaACwAAAAAGAAYAIQkJiScnpzU0tTs6uxkZmQ8Pjy8vrzc3tz09vTMysw0NjTc2tz08vRMTkzExsTk5uT8/vwsKizU1tTs7uyMiozEwsTk4uT8+vzMzsxUUlT///8AAAAAAAAAAAAAAAAAAAAF76Amjho0HQLCCMcEkfAIWU5VGcxg3In1xiJE4kacTHaGXQIB1DCIyBzyZpDEEJILw4FcMhJTAUSwkA0xkO3iQkIcKmiBosHWWJDieowxVkQAASVcRAxNQQUAiQUXEzY7ZYYiFImJFQtJN0yRGg9/iRQCRAmbIxmUBAxGE4WkGgsOCQkCqamapAw5qwJdrRpgNyxTtoYXSAYLjUgHpAtEFRMXNVGREFxJDi93wBc/e2k2FRYiEGACWg4HwxfN5k8J3StaUBgqYEkGYhPDIltTFVKOblgBImQKDh3zWAGZIc0AAh07HPggZQKFChYugIQAACH5BAkJABoALAAAAAAYABgAhCQmJJyenNTS1Ozq7GRmZDw+PLy+vNze3PT29MzKzDQ2NNza3PTy9MTGxOTm5Pz+/CwqLNTW1Ozu7IyKjExOTMTCxOTi5Pz6/MzOzDw6PP///wAAAAAAAAAAAAAAAAAAAAXroCaO2iMdAsIIh/SQ8PhYTVUZzGDcifXGIkTiRpRIdoZdAgHUMIjIHPJmiMQQkQujgVwyElPBg8EUPYaYcWNxISEOlfQz8bMgxW0gY0y0lLhEDE1mNUkNJjY7C4MjCzs3Eo5IZYwXSTcLAkQJjCRDOwIMRhKCnSKiRgyiopSdCw0JCQICXaYiFAC5BAdTrU0DELkAExJQB6YTucEVF4U3pU0XGcIZbXY3Ahc/MXsCCrkBZmDZWwetFwtxD94UeU7kUBgqYJdpAoswW1MVUok2Ak2ETMGhA8qSQTMKGUCgY0cDH6ZMoFDBwgWQEAAh+QQJCQAcACwAAAAAGAAYAIQkJiScnpzU0tTs6uxkYmS8urzc3tz09vTExsQ8PjyMiozc2tz08vR0cnTEwsTk5uT8/vzMzsxMTkwsKizU1tTs7uxkZmS8vrzk4uT8+vzMysxUUlT///8AAAAAAAAAAAAF6iAnjhxUGcLBCEYFkfAIYYjjXMxw3Rr2xqKD5kasVHaXneYA5DCIyBzydqHEDpQMA4FcMjRTAYTBFEGGkTFikSEdDI70U/PDIMVtIGNMxJS4RAxNZjVJCCY2OwuDIws7NxWOSGWMGUk3CwJEGowkQzsCDEYVgp0iokYMoqKUnSqkK12mImA3LFOtTZZUCxVQBqYLUBUZhTelTRBcO4ccdrYZPzELKol+JWACWggGrQMKEwTVdCMrWlARBwISEwDu4mQxW1MODAXu+BMNTUJTOPf4AEhYlIwGFXv4EgTIw8gEigMILChwwJBECAAh+QQJCQAZACwAAAAAGAAYAIQkJiScnpzU0tTs6uxkZmS8vrzc3tz09vQ8PjzMysw0NjTc2tz08vTExsTk5uT8/vwsKizU1tTs7uyMiozEwsTk4uT8+vxMTkzMzsz///8AAAAAAAAAAAAAAAAAAAAAAAAF7mAmjtkjGcLBCIb0kPD4VA1FFcxQ3En1xqJD4kaUSHaFXeIAzDCIyBzyVojEDhELo4FcMhJTwYPBFD2GmHFjYSEdDJT0M/GrIMVtIGNMrJS4RAxNZjVJDSY2OwuDIws7NxKOSGWMFkk3CwJECYwkQzsCDEYSgp0iokYMoqKUnSqkK12mImA3LFOtTZZUCxJQBqYLUBIWhTelTQ9cO4cZdrYWeTF7Tzd+JWACFgIIEw4kFo5icz9O2hEKAAAQFxVflwXaErkZ6OrqEBE6UFVNCxf31C3Y92jJIAsBENwTQLCBD1MWKEwgUEECCxdAQgAAIfkECQkAGgAsAAAAABgAGAAABeqgJo4aNBnCwQjGBJHwCFlOVRXMUNyI9caiA+JGnEx2hR3iANQwiMgc8laQxA6SC8OBXDIQUwGEwRRBhpixY3EhHQyV9BPxsyDFbSBjTLSUuEQMTWY1SQ4mNjsLgyMLOzcTjkhljBdJNwsCRAiMJEM7AgxGE4KdIqJGDBIICGumQaSkFAC0Ga8an3EKtBERD6aWVHC0tAqmjjYVAxcJxBGLgxdchi8BvAQHPzF7TzZ+GhcZAAQMWwaU4AtxfHSNDVpEFV5glwIXE+inUDtSiUlWesBA6fdoyaAZhQoc0LHDgQ9TJlCoYOECSAgAIfkECQkAGgAsAAAAABgAGACEJCYknJ6c1NLU7OrsZGJk3N7c9Pb0PD48vL68jIqMxMbE3Nrc9PL0dHJ05Obk/P78TE5MLCos1NbU7O7sZGZk5OLk/Pr8xMLEzMrMVFJU////AAAAAAAAAAAAAAAAAAAABemgJo7aMxWCwQjF9JDw+FTKdSHMgNxY9cYiA+ZGnEx2iB3GANQwiMgc8oaQxBYNlQK5ZGCmggeDKbJAABTtwkIyFC4YMfwXANgJll+MId9VNBYHABGDVk0lNUkKDxd2dgmHIws7NxMJjhEDkUFQCwSOGZsjXzYCEhioC6IiDEYTDK0DE2SisK8TAlyrGl87LFO0hxZICAsTUAWiC0QXExaJNwyRD1s3ixoVSAJ5TXxPfiIPX9sMCgXBFsvkcyMrFt88Kr1JYbB71ZRSNkiGMUJTCAzogLLk0IxEOI7sUOBDlAkUKgQY00MiBAAh+QQJCQAaACwAAAAAGAAYAIQkJiScnpzU0tTs6uxkZmQ8Pjy8vrzc3tz09vTMysw0NjTc2tz08vTExsTk5uT8/vwsKizU1tTs7uyMioxMTkzEwsTk4uT8+vzMzsw8Ojz///8AAAAAAAAAAAAAAAAAAAAF76AmjtrVTMTBCIf0kPB4BQVgR4NRVY31xqIFBQAhAgS5ikGXQAA1AoVtKpAor4ZIDBG5RG0QioWR0C0FD4ZT9CgLvJmJhXRZVN6MSuJnMb/XMQxpSgZzDw2EFQxPbA1mDQ9WZgeMIwc6ShILZhWAjBdLSgcCZgmVJBhXAgwSEgyLpyKsDAOvrhKelaytK6GmsRoJVxgHiblACFgtmAaUp3ZmEiahBrBPh6UXGhaqFz+BgzrObQZ4DQeedRUYg3sjDF15ZhgIZEs6eMcMjleKSYlakJXBQouanmMjHlhAtARBEgMJDnxjFGlUPRYugIQAADs=" />
+				</div>
+				<div data-ng-hide="loading">
+					<div data-ng-show="data.length == 0"
+						class="text-center">{{ i18n('m.rbs.mondialrelay.front.no_data', ['ucf']) }}</div>
+					<div data-ng-show="data.length > 0" class="list-group" style="max-height: 360px; overflow: auto" id="mondialRelayList">
+						<a data-ng-repeat="relay in data" href="javascript:" class="list-group-item"
+							data-ng-class="{active: $index == selectedIndex}" data-ng-click="selectRelay($index)" id="point(=$index=)">
+							<address class="no-bottom-margin">
+								<strong>((= relay.options.letter =)) - (= relay.address.__lines[0] =)</strong>
+								<div data-ng-repeat="line in relay.address.__lines track by $index" data-ng-show="!$first">(= line =)</div>
+							</address>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-8">
+			<div id="ShippingMap" style="min-height: 360px"></div>
+		</div>
+	</div>
+</div>

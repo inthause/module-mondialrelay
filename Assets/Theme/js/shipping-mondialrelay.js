@@ -181,7 +181,7 @@
 						});
 
 						var mapBounds = scope.map.getBounds();
-						scope.map.setView([relay.latitude + (Math.abs((relay.latitude - mapBounds._southWest.lat))/2), relay.longitude]);
+						scope.map.setView([relay.latitude + (4*(Math.abs((relay.latitude - mapBounds._southWest.lat))/5)), relay.longitude]);
 					});
 					marker.on('popupclose', function(e){
 						scope.currentOpennedRelay = null;

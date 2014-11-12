@@ -9,7 +9,7 @@
 			</ul>
 			<div class="tab-content">
 				<div id="tabs-0" class="tab-pane active">
-					<table class="table-striped text-center">
+					<table class="table table-striped table-condensed text-center no-bottom-margin">
 						<tr data-ng-repeat="timeSlot in relay.options.timeSlot">
 							<th>(= timeSlot.dayName =)</th>
 							<td data-ng-show="timeSlot.schedule.length == 0" colspan="2">{{ i18n('m.rbs.mondialrelay.front.closed', ['ucf']) }}</td>

@@ -1,0 +1,8 @@
+{
+	"license": "MPL-2.0",
+	"name": "rbs/mondialrelay",
+	"type":"rbschange-module",
+	"require": {
+		"rbschange/plugin-installer": "*"
+	}
+}

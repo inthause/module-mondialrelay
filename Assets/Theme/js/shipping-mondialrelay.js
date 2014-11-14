@@ -4,7 +4,8 @@
 	var app = angular.module('RbsChangeApp');
 
 	document.write('<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>');
-	document.write('<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>');
+	// TODO Find the way to configure layers
+	// document.write('<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>');
 	document.write('<script type="text/javascript" src="http://matchingnotes.com/javascripts/leaflet-google.js"></script>');
 
 	var head  = document.getElementsByTagName('head')[0];
@@ -30,16 +31,18 @@
 				scope.options = {modeId: scope.delivery.modeId};
 				scope.data = [];
 				scope.loading = false;
-				scope.defaultLatitude = 48.5809899;
-				scope.defaultLongitude = 7.7542448;
+				scope.defaultLatitude = 48.856578;
+				scope.defaultLongitude = 2.351828;
 				scope.defaultCountry = 'FR';
 				scope.defaultZipcode = '';
-				scope.defaultZoom = 13;
+				scope.defaultZoom = 11;
 				scope.markers = [];
 				scope.bounds = [];
 				scope.listDiv = element.find('#mondialRelayList');
 
-				scope.layersToLoad = [{title: 'Google', code: 'GOOGLE'}, {title: 'OpenStreetMap', code: 'OSM'}];
+				// TODO Find the way to configure layers
+				// scope.layersToLoad = [{title: 'Google', code: 'GOOGLE'}, {title: 'OpenStreetMap', code: 'OSM'}];
+				scope.layersToLoad = [{title: 'OpenStreetMap', code: 'OSM'}];
 
 				scope.currentAddress = {country: scope.defaultCountry, zipCode: scope.defaultZipcode};
 				scope.currentPosition = {latitude:null, longitude:null};
@@ -138,7 +141,6 @@
 
 					if (dataLength > 0)
 					{
-						//scope.map.setView([latCenter/dataLength, longCenter/dataLength]);
 						scope.map.fitBounds(scope.bounds);
 					}
 				};

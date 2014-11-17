@@ -105,7 +105,7 @@ class MondialrelayShippingManager
 
 								$options = [
 									'letter' => $letter,
-									'iconUrl' => '/Theme/Rbs/Base/Rbs_Mondialrelay/img/pr' . $letter . '.png',
+									'iconUrl' => '/Theme/Rbs/Base/Rbs_Mondialrelay/img/pr-' . $letter . '.png',
 									'distance' => $item->Distance,
 									'activityType' => $item->TypeActivite,
 									'localisation1' => trim($item->Localisation1),

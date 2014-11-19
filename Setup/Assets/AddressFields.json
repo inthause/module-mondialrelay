@@ -1,0 +1,203 @@
+{
+    "documents": [
+        {
+            "_id": "AddressFields",
+            "_model": "Rbs_Geo_AddressFields",
+            "fields": [
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": false,
+                    "code": "LgAdr1",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "LgAdr1",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "LgAdr1",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": false,
+                    "code": "LgAdr2",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "LgAdr2",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "LgAdr2",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": false,
+                    "code": "LgAdr3",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "LgAdr3",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "LgAdr3",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": false,
+                    "code": "LgAdr4",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "LgAdr4",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "LgAdr4",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": true,
+                    "code": "zipCode",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "zipCode",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "zipCode",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": true,
+                    "code": "locality",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "locality",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "locality",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": true,
+                    "code": "countryCode",
+                    "required": false,
+                    "collectionCode": "Rbs_Geo_Collection_Countries",
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "countryCode",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "countryCode",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": false,
+                    "code": "Num",
+                    "required": true,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "Num",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "Num",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": false,
+                    "code": "Latitude",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "Latitude",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "Latitude",
+                            "matchErrorMessage": null
+                        }
+                    }
+                },
+                {
+                    "_model": "Rbs_Geo_AddressField",
+                    "_inline": true,
+                    "locked": false,
+                    "code": "Longitude",
+                    "required": false,
+                    "collectionCode": null,
+                    "defaultValue": null,
+                    "match": null,
+                    "label": "Longitude",
+                    "_LCID": {
+                        "fr_FR": {
+                            "title": "Longitude",
+                            "matchErrorMessage": null
+                        }
+                    }
+                }
+            ],
+            "fieldsLayoutData": [
+                [
+                    "LgAdr1"
+                ],
+                [
+                    "LgAdr2"
+                ],
+                [
+                    "LgAdr3"
+                ],
+                [
+                    "LgAdr4"
+                ],
+                [
+                    "zipCode",
+                    "locality"
+                ],
+                [
+                    "country"
+                ]
+            ],
+            "label": "Mondial Relay"
+        }
+    ],
+    "contextId": "Rbs_Mondialrelay_Setup"
+}

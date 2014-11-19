@@ -28,13 +28,13 @@ class Listeners implements ListenerAggregateInterface
 	{
 		$callback = function (Event $event)
 		{
-			(new \Rbs\Mondialrelay\MondialrelayShippingManager())->getCityAutocompletion($event);
+			(new \Rbs\Mondialrelay\MondialrelayShippingManager())->onGetCityAutoCompletion($event);
 		};
-		$events->attach('getCityAutocompletion', $callback, 5);
+		$events->attach('getCityAutoCompletion', $callback, 5);
 
 		$callback = function (Event $event)
 		{
-			(new \Rbs\Mondialrelay\MondialrelayShippingManager())->getPoints($event);
+			(new \Rbs\Mondialrelay\MondialrelayShippingManager())->onGetPoints($event);
 		};
 		$events->attach('getPoints', $callback, 5);
 	}

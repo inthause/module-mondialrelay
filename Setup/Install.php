@@ -24,4 +24,26 @@ class Install extends \Change\Plugins\InstallBase
 	{
 		$configuration->addPersistentEntry('Rbs/Geo/Events/GeoManager/Rbs_Mondialrelay', '\Rbs\Mondialrelay\Events\GeoManager\Listeners');
 	}
+
+	public function executeServices($plugin, $applicationServices)
+	{
+		parent::executeServices($plugin, $applicationServices);
+
+		$applicationServices->getDocumentCodeManager();
+
+		$import = new \Rbs\Generic\Json\Import($applicationServices->getDocumentManager());
+		$import->setDocumentCodeManager($applicationServices->getDocumentCodeManager());
+
+		$json = json_decode(file_get_contents(__DIR__ . '/Assets/AddressFields.json'), true);
+		try
+		{
+			$applicationServices->getTransactionManager()->begin();
+			$import->fromArray($json);
+			$applicationServices->getTransactionManager()->commit();
+		}
+		catch (\Exception $e)
+		{
+			$applicationServices->getTransactionManager()->rollBack($e);
+		}
+	}
 }

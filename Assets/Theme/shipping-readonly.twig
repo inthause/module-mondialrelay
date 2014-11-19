@@ -1,8 +1,8 @@
 <div class="row">
 	<div class="col-sm-4">
 		<address>
-			<strong>(= relay.address.__lines[0] =)</strong>
-			<div data-ng-repeat="line in relay.address.__lines track by $index" data-ng-show="!$first">(= line =)</div>
+			<strong>(= shippingMode.address.lines[0] =)</strong>
+			<div data-ng-repeat="line in shippingMode.address.lines track by $index" data-ng-show="!$first">(= line =)</div>
 		</address>
 		<p data-ng-show="relay.options.localisation1">(= relay.options.localisation1 =)</p>
 		<p data-ng-show="relay.options.localisation2">(= relay.options.localisation2 =)</p>

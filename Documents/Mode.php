@@ -16,21 +16,25 @@ use Change\Documents\Events\Event;
  */
 class Mode extends \Compilation\Rbs\Mondialrelay\Documents\Mode
 {
-
-	protected function attachEvents($eventManager)
+	/**
+	 * @return string
+	 */
+	public function getCategory()
 	{
-		parent::attachEvents($eventManager);
-		$eventManager->attach('httpInfos', [$this, 'onDefaultHttpInfos'], 5);
+		return static::CATEGORY_RELAY;
 	}
 
-	/**
-	 * @param Event $event
-	 */
-	public function onDefaultHttpInfos(Event $event)
+	public function onDefaultGetModeData(Event $event)
 	{
-		$httpInfos = $event->getParam('httpInfos',[]);
-		$httpInfos['directiveName'] = 'rbs-commerce-shipping-mode-configuration-mondialrelay';
-		$event->setParam('httpInfos', $httpInfos);
+		parent::onDefaultGetModeData($event);
+		$modeData = $event->getParam('modeData');
+		$modeData['editor'] = [
+			'layers' => [['title' => 'OpenStreetMap', 'code' => 'OSM']],
+			'defaultLatitude' => 48.856578,
+			'defaultLongitude' => 2.351828,
+			'defaultZoom' => 11
+		];
+		$event->setParam('modeData', $modeData);
 	}
 
 	/**

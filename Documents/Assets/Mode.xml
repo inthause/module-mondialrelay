@@ -9,8 +9,7 @@
 		<property name="action" type="String"/>
 		<property name="delay" type="Integer" default-value="0"/>
 		<property name="searchradius" type="Integer" default-value="50"/>
-
-		<property name="hasAddress" default-value="false" />
+		<property name="addressFields" type="Document" document-type="Rbs_Geo_AddressFields" />
 
 	</properties>
 </document>

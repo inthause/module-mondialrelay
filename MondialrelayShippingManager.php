@@ -14,55 +14,78 @@ namespace Rbs\Mondialrelay;
 
 class MondialrelayShippingManager
 {
-
 	/**
+	 * Default context params:
+	 *  - data:
+	 *    - address:
+	 *       - country
+	 *       - zipCode
+	 *       - city
+	 *    - position:
+	 *       - latitude
+	 *       - longitude
+	 *    - options:
+	 *       - modeId
+	 *    - matchingZone: string or array
 	 * @param \Change\Events\Event $event
-	 * @return array
 	 */
-	public function getPoints($event)
+	public function onGetPoints($event)
 	{
+		$points = $event->getParam('points');
+		if (is_array($points))
+		{
+			return;
+		}
+
 		$genericServices = $event->getServices('genericServices');
 		if (!($genericServices instanceof \Rbs\Generic\GenericServices))
 		{
-			throw new \RuntimeException('Unable to get GenericServices', 999999);
+			return;
 		}
 
-		$points = $event->getParam('points', []);
-		$context = $event->getParam('context') + ['address' => [], 'position' => [], 'options' => []];
-		if ($context['options']['modeId'] && count($points) == 0)
+		$context = $event->getParam('context') + ['data' => ['address' => [], 'position' => [], 'options' => [], 'matchingZone' => null]];
+		$data = $context['data'];
+
+		if (isset($data['options']['modeId']) && is_numeric($data['options']['modeId']))
 		{
+			$matchingZone = $data['matchingZone'];
 			$documentManager = $event->getApplicationServices()->getDocumentManager();
-			$mode = $documentManager->getDocumentInstance($context['options']['modeId']);
+			$mode = $documentManager->getDocumentInstance($data['options']['modeId']);
 			if ($mode instanceof \Rbs\Mondialrelay\Documents\Mode)
 			{
 
+				$geoManager = $genericServices->getGeoManager();
+				$addressFields = $mode->getAddressFields();
+				if (!$addressFields)
+				{
+					$event->getApplication()->getLogging()->error('AddressFields not defined on: ' . $mode . ', ' . $mode->getLabel());
+					return;
+				}
+				$points = [];
 				$clientOptions = array('encoding' => 'utf-8', 'trace' => true);
 				$soapClient = new \SoapClient($mode->getWSUrl(), $clientOptions);
 
 				$params = array(
 					'Enseigne' => $mode->getVendorcode(),
-					'Pays' => isset($context['address']['country']) ? $context['address']['country'] : "FR",
-					'Ville' => isset($context['address']['city']) ? $context['address']['city'] : "",
-					'CP' => isset($context['address']['zipCode']) ? $context['address']['zipCode'] : "",
-					'Latitude' => isset($context['position']['latitude']) ? $context['position']['latitude'] : "",
-					'Longitude' => isset($context['position']['longitude']) ? $context['position']['longitude'] : "",
+					'Pays' => isset($data['address']['country']) ? $data['address']['country'] : "FR",
+					'Ville' => isset($data['address']['city']) ? $data['address']['city'] : "",
+					'CP' => isset($data['address']['zipCode']) ? $data['address']['zipCode'] : "",
+					'Latitude' => isset($data['position']['latitude']) ? $data['position']['latitude'] : "",
+					'Longitude' => isset($data['position']['longitude']) ? $data['position']['longitude'] : "",
 					'Taille' => "",
-					'Poids' => isset($context['options']['weight']) ? $context['options']['weight'] : "",
+					'Poids' => isset($data['options']['weight']) ? $data['options']['weight'] : "",
 					'Action' => $mode->getAction() ? $mode->getAction() : "",
 					'DelaiEnvoi' => $mode->getDelay() ? $mode->getDelay() : "0",
 					'RayonRecherche' => $mode->getSearchradius() ? $mode->getSearchradius() : ""
 				);
 				$params["Security"] = $this->generateSecurityKey($params, $mode->getVendorprivatekey());
-
 				$resultSoap = null;
 				try
 				{
 					$resultSoap = $soapClient->WSI3_PointRelais_Recherche($params);
-
 					if ($resultSoap != null)
 					{
 						$result = $resultSoap->WSI3_PointRelais_RechercheResult;
-
 						$status = $result->STAT;
 						if ($status == '0')
 						{
@@ -79,6 +102,26 @@ class MondialrelayShippingManager
 							$index = 0;
 							foreach ($list as $item)
 							{
+								$addressData = [
+									'__addressFieldsId' => $addressFields->getId(),
+									\Rbs\Geo\Address\AddressInterface::COUNTRY_CODE_FIELD_NAME => $item->Pays,
+									\Rbs\Geo\Address\AddressInterface::ZIP_CODE_FIELD_NAME => $item->CP,
+									\Rbs\Geo\Address\AddressInterface::LOCALITY_FIELD_NAME => trim($item->Ville),
+									'LgAdr1' => trim($item->LgAdr1),
+									'LgAdr2' => trim($item->LgAdr2),
+									'LgAdr3' => trim($item->LgAdr3),
+									'LgAdr4' => trim($item->LgAdr4),
+									'Num' => $item->Num,
+									'Latitude' => str_replace(',', '.', $item->Latitude),
+									'Longitude' => str_replace(',', '.', $item->Longitude),
+								];
+
+								$address = new \Rbs\Geo\Address\BaseAddress($addressData);
+								$checkMatchingZone = $this->checkMatchingAddress($address, $matchingZone, $geoManager);
+								if (!$checkMatchingZone)
+								{
+									continue;
+								}
 
 								$point = new \Rbs\Geo\Map\Point();
 								$point->setTitle(trim($item->LgAdr1));
@@ -88,22 +131,13 @@ class MondialrelayShippingManager
 
 								$letter = chr(ord('A') + $index);
 
-								$country = $this->getCountryByCode($documentManager, $item->Pays);
 
-								$address = new \Rbs\Geo\Address\BaseAddress(
-									[\Rbs\Geo\Address\AddressInterface::COUNTRY_CODE_FIELD_NAME => $item->Pays,
-									\Rbs\Geo\Address\AddressInterface::ZIP_CODE_FIELD_NAME => $item->CP,
-									\Rbs\Geo\Address\AddressInterface::LOCALITY_FIELD_NAME => trim($item->Ville),
-									'__addressFieldsId' => $country->getAddressFieldsId()
-									]
-								);
 
-								$geoManager = $genericServices->getGeoManager();
-								$address->setLines(array_merge([trim($item->LgAdr1), trim($item->LgAdr2),
-									trim($item->LgAdr3), trim($item->LgAdr4)], $geoManager->getFormattedAddress($address)));
+								$address->setLines($geoManager->getFormattedAddress($address));
 								$point->setAddress($address);
 
 								$options = [
+									'matchingZone' => $checkMatchingZone,
 									'letter' => $letter,
 									'iconUrl' => '/Theme/Rbs/Base/Rbs_Mondialrelay/img/pr-' . $letter . '.png',
 									'distance' => $item->Distance,
@@ -133,15 +167,8 @@ class MondialrelayShippingManager
 								}
 
 								$point->setOptions($options);
-
 								$points[] = $point->toArray();
-
 								$index++;
-
-								// TODO Try to display information of disponibility
-								// $item->Informations_Dispo
-								// $item->Debut
-								// $item->Fin
 							}
 						}
 					}
@@ -150,22 +177,50 @@ class MondialrelayShippingManager
 				{
 					$event->getApplication()->getLogging()->error('SOAP CALL Fail : ' . $e->getMessage());
 				}
+				$event->setParam('points', $points);
 			}
 		}
-
-		$event->setParam('points', $points);
 	}
 
 	/**
-	 * @param \Change\Documents\DocumentManager $documentManager
-	 * @param string $countryCode
-	 * @return \Rbs\Geo\Documents\Country|null
+	 * @param \Rbs\Geo\Address\AddressInterface $address
+	 * @param string|string[] $matchingZone
+	 * @param \Rbs\Geo\GeoManager $geoManager
+	 * @return boolean
 	 */
-	protected function getCountryByCode($documentManager, $countryCode)
+	protected function checkMatchingAddress($address, $matchingZone, $geoManager)
 	{
-		$query = $documentManager->getNewQuery('Rbs_Geo_Country');
-		$query->andPredicates($query->eq('code', $countryCode));
-		return $query->getFirstDocument();
+		if (!$matchingZone)
+		{
+			return true;
+		}
+		elseif (is_string($matchingZone))
+		{
+			$match = true;
+			$zone = $geoManager->getZoneByCode($matchingZone);
+			if ($zone)
+			{
+				$match = $geoManager->isValidAddressForZone($address, $matchingZone);
+			}
+			return $match ? $matchingZone : false;
+		}
+		elseif (is_array($matchingZone))
+		{
+			$match = false;
+			foreach ($matchingZone as $zone)
+			{
+				if (is_string($zone))
+				{
+					$match = $this->checkMatchingAddress($address, $zone, $geoManager);
+					if ($match)
+					{
+						break;
+					}
+				}
+			}
+			return $match;
+		}
+		return false;
 	}
 
 	protected function formatHours($hoursOfDay)
@@ -211,22 +266,30 @@ class MondialrelayShippingManager
 	 * @param \Change\Events\Event $event
 	 * @return array
 	 */
-	public function getCityAutocompletion($event)
+	public function onGetCityAutoCompletion($event)
 	{
-		$cities = $event->getParam('cities', []);
-		$context = $event->getParam('context');
-		if ($context['options']['modeId'] && count($cities) == 0)
+		$cities = $event->getParam('cities');
+		if (is_array($cities))
 		{
-			$mode = $event->getApplicationServices()->getDocumentManager()->getDocumentInstance($context['options']['modeId']);
+			return;
+		}
+
+		$context = $event->getParam('context') + ['data' => ['beginOfName' => null, 'countryCode' => null, 'options' => []]];
+		$data = $context['data'];
+
+		if (isset($data['options']['modeId']) && is_numeric($data['options']['modeId']))
+		{
+			$mode = $event->getApplicationServices()->getDocumentManager()->getDocumentInstance($data['options']['modeId']);
 			if ($mode instanceof \Rbs\Mondialrelay\Documents\Mode)
 			{
+				$cities = [];
 				$clientOptions = array('encoding' => 'utf-8', 'trace' => true);
 				$soapClient = new \SoapClient($mode->getWSUrl(), $clientOptions);
 
 				$params = array(
 					'Enseigne' => $mode->getVendorcode(),
-					'Pays' => $context['countryCode'],
-					'Ville' => $context['beginOfName'],
+					'Pays' => $data['countryCode'],
+					'Ville' => $data['beginOfName'],
 					'CP' => "",
 					'NbResult' => 10
 				);
@@ -236,21 +299,24 @@ class MondialrelayShippingManager
 				try
 				{
 					$resultSoap = $soapClient->WSI2_RechercheCP($params);
-
 					if ($resultSoap != null)
 					{
 						$result = $resultSoap->WSI2_RechercheCPResult;
-
 						if ($result->STAT == '0')
 						{
-							if (isset($result->Liste))
+							if (isset($result->Liste) && isset($result->Liste->Commune))
 							{
-								if (isset($result->Liste->Commune))
+								$commune = $result->Liste->Commune;
+								if (is_array($commune))
 								{
-									foreach ($result->Liste->Commune as $item)
+									foreach ($commune as $item)
 									{
 										$cities[] = ['title' => $item->Ville, 'zipCode' => $item->CP];
 									}
+								}
+								elseif (is_object($commune))
+								{
+									$cities[] = ['title' => $commune->Ville, 'zipCode' => $commune->CP];
 								}
 							}
 						}
@@ -260,10 +326,9 @@ class MondialrelayShippingManager
 				{
 					$event->getApplication()->getLogging()->error('SOAP CALL Fail : ' . $e->getMessage());
 				}
+				$event->setParam('cities', $cities);
 			}
 		}
-
-		$event->setParam('cities', $cities);
 	}
 
 	/**

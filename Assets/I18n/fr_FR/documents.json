@@ -13,5 +13,8 @@
 	},
 	"mode_searchradius":{
 		"message":"distance de recherche (km)"
+	},
+	"mode_addressfields":{
+		"message":"modèles d'adresse"
 	}
 }

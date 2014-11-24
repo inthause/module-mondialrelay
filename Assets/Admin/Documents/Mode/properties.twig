@@ -14,6 +14,12 @@
 	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'vendorprivatekey'), ['ucf']) }}">
 </rbs-field-text>
 
+<rbs-field-picker property="addressFields"
+		label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'addressFields'), ['ucf']) }}"
+		accepted-model="Rbs_Geo_AddressFields"
+		selector-title="{{ i18nAttr('m.rbs.geo.admin.country_select_addressfields', ['ucf']) }}">
+</rbs-field-picker>
+
 <rbs-field-integer property="delay"
 	label="{{ i18nAttr(propertyKey('Rbs_Mondialrelay_Mode', 'delay'), ['ucf']) }}">
 </rbs-field-integer>

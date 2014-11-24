@@ -1,12 +1,4 @@
 {
-	"/Rbs/Mondialrelay/": {
-		"module": "Rbs_Mondialrelay",
-		"name": "home",
-		"rule": {
-			"redirectTo": "/404"
-		},
-		"auto": true
-	},
 	"/Rbs/Commerce/Mondialrelaymode/": {
 		"model": "Rbs_Mondialrelay_Mode",
 		"name": "list",
@@ -16,9 +8,6 @@
 		},
 		"auto": false
 	},
-	"/Rbs/Mondialrelay/Mode/:id":false,
-	"/Rbs/Mondialrelay/Mode/new": false,
-	"/Rbs/Mondialrelay/Mode/:id/translate/:LCID":false,
 	"/Rbs/Commerce/Mondialrelaymode/:id": {
 		"model": "Rbs_Mondialrelay_Mode",
 		"name": "edit",
@@ -26,15 +15,6 @@
 			"templateUrl": "Document/Rbs/Mondialrelay/Mode/edit.twig",
 			"labelKey": "m.rbs.mondialrelay.documents.mondialrelaymode | ucf",
 			"labelId": "id"
-		},
-		"auto": false
-	},
-	"/Rbs/Commerce/Mondialrelaymode/new": {
-		"model": "Rbs_Mondialrelay_Mode",
-		"name": "new",
-		"rule": {
-			"templateUrl": "Document/Rbs/Mondialrelay/Mode/new.twig",
-			"labelKey": "m.rbs.admin.adminjs.new_resource | ucf"
 		},
 		"auto": false
 	},
@@ -47,5 +27,25 @@
 			"labelKey": "m.rbs.admin.admin.translation | ucf"
 		},
 		"auto": false
-	}
+	},
+	"/Rbs/Commerce/Mondialrelaymode/new": {
+		"model": "Rbs_Mondialrelay_Mode",
+		"name": "new",
+		"rule": {
+			"templateUrl": "Document/Rbs/Mondialrelay/Mode/new.twig",
+			"labelKey": "m.rbs.admin.adminjs.new_resource | ucf"
+		},
+		"auto": false
+	},
+	"/Rbs/Mondialrelay/": {
+		"module": "Rbs_Mondialrelay",
+		"name": "home",
+		"rule": {
+			"redirectTo": "/404"
+		},
+		"auto": true
+	},
+	"/Rbs/Mondialrelay/Mode/:id": false,
+	"/Rbs/Mondialrelay/Mode/:id/translate/:LCID": false,
+	"/Rbs/Mondialrelay/Mode/new": false
 }

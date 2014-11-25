@@ -29,7 +29,7 @@
 
 				<div class="form-group" data-ng-show="countries.length">
 					<label class="sr-only" for="country">{{ i18n('m.rbs.mondialrelay.front.country', ['ucf']) }}</label>
-					<select data-ng-disabled="countries.length == 1" class="form-control" data-ng-model="currentAddress.country" data-ng-disabled="loading"
+					<select data-ng-disabled="countries.length == 1 || loading" class="form-control" data-ng-model="currentAddress.country"
 						data-ng-options="country.common.code as country.common.title for country in countries"></select>
 				</div>
 

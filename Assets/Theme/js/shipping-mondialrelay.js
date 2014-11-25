@@ -42,7 +42,7 @@
 				userAddresses: '='
 			},
 			link: function (scope, element, attributes, processController) {
-				scope.selectedIndex = null; //index du point selectionné
+				scope.selectedIndex = null; // Selected point index.
 				scope.options = {modeId: scope.shippingModeInfo.common.id};
 				scope.data = [];
 				scope.loading = false;
@@ -75,11 +75,11 @@
 				});
 
 				scope.setTaxZone = function(taxZone) {
-					if (processController.getCartData().common.zone != taxZone) {
+					if (processController.getObjectData().common.zone != taxZone) {
 						var actions = {
 							setZone: {zone : taxZone}
 						};
-						processController.updateCartData(actions)
+						processController.updateObjectData(actions);
 					}
 				};
 
@@ -261,14 +261,14 @@
 						scope.selectedIndex = index;
 						scope.relayAddress = scope.data[index].address;
 						var taxZone = scope.data[index].options.matchingZone;
-						if (taxZone && taxZone !== true) {
+						if (taxZone && taxZone !== true && scope.shippingMode.taxesZones) {
 							scope.setTaxZone(taxZone);
 						}
 						scope.shippingMode.options.relay = scope.data[index];
 					}
 				};
 
-				// Autocomplete city
+				// Auto-complete city.
 				scope.getLocation = function(val) {
 					return AjaxAPI.getData('Rbs/Geo/CityAutoCompletion/',
 						{beginOfName: val, countryCode: scope.currentAddress.country, options:scope.options})
@@ -334,21 +334,18 @@
 				function relayValid(returnData) {
 					if (returnData) {
 						var shippingMode = scope.shippingMode;
-
 						var relay = angular.copy(shippingMode.options.relay);
 						delete relay.address;
 						relay.searchAtAddress = scope.currentAddress;
 						relay.searchAtPosition = scope.currentPosition;
-						var data = {
+						return {
 							id: scope.shippingModeInfo.common.id, title: scope.shippingModeInfo.common.title,
 							lineKeys: shippingMode.lineKeys,
 							address: scope.relayAddress,
-							options: {category: 'relay', relay : relay}
+							options: { category: 'relay', relay: relay }
 						};
-						return data;
 					}
-					var valid = (scope.shippingModeInfo.common.id == scope.shippingMode.id) && scope.relayAddress != null;
-					return valid;
+					return (scope.shippingModeInfo.common.id == scope.shippingMode.id) && scope.relayAddress != null;
 				}
 
 				scope.$watch('shippingMode.id', function(id) {
@@ -356,7 +353,7 @@
 						scope.map.invalidateSize(false);
 						scope.shippingMode.valid = relayValid;
 					}
-				})
+				});
 			}
 		}
 	}

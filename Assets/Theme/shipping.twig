@@ -8,10 +8,9 @@
 	}
 </style>
 <div>
-	<div class="row">
+	<div class="row one-line-bottom-margin">
 		<div class="col-sm-12">
 			<form class="form-inline">
-
 				<div class="form-group">
 					<label class="sr-only" for="city">{{ i18n('m.rbs.mondialrelay.front.city', ['ucf']) }}</label>
 					<input type="text" id="city" data-ng-model="currentAddress.city" placeholder="{{ i18nAttr('m.rbs.mondialrelay.front.city', ['ucf']) }}"
@@ -34,9 +33,9 @@
 				</div>
 
 				<button type="submit" data-ng-disabled="loading" data-ng-click="searchWithAddress()"
-					class="btn btn-default btn-primary">{{ i18n('m.rbs.mondialrelay.front.search', ['ucf']) }}</button>
+					class="btn btn-default">{{ i18n('m.rbs.mondialrelay.front.search', ['ucf']) }}</button>
 				<button type="submit" data-ng-disabled="loading" data-ng-click="locateMe()"
-					class="btn btn-default btn-primary">{{ i18n('m.rbs.mondialrelay.front.locate_me', ['ucf']) }}</button>
+					class="btn btn-default">{{ i18n('m.rbs.mondialrelay.front.locate_me', ['ucf']) }}</button>
 			</form>
 		</div>
 	</div>

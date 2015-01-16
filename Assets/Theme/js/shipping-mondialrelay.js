@@ -1,20 +1,7 @@
 (function () {
 	"use strict";
 	var app = angular.module('RbsChangeApp');
-
-	document.write('<script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>');
-
-	// TODO Find the way to configure layers
-	// document.write('<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>');
-	document.write('<script type="text/javascript" src="http://matchingnotes.com/javascripts/leaflet-google.js"></script>');
-
-	var head  = document.getElementsByTagName('head')[0];
-	var link  = document.createElement('link');
-	link.rel  = 'stylesheet';
-	link.type = 'text/css';
-	link.href = 'http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css';
-	link.media = 'all';
-	head.appendChild(link);
+	window.__change.__resources.push(function() {window.__change.RBS_Geo.initLeafletMap()});
 
 	function rbsMondialrelayModeEditor(AjaxAPI, $compile) {
 		var baseTemplateURL = null;
@@ -52,7 +39,7 @@
 				scope.markers = [];
 				scope.bounds = [];
 				scope.listDiv = element.find('#mondialRelayList');
-				scope.layersToLoad = null;
+				scope.titleLayer = null;
 				scope.currentAddress = {country: '', zipCode: ''};
 				scope.currentPosition = {latitude:null, longitude:null};
 				scope.relayAddress = null;
@@ -92,29 +79,14 @@
 				};
 
 				scope.loadLayers = function loadLayers() {
-					var layers = {};
-					var nbLayers = 0;
-					for (var i=0; i<scope.layersToLoad.length;  i++){
-						var l = null;
-						if (scope.layersToLoad[i].code == 'GOOGLE')
-						{
-							// Possible types: SATELLITE, ROADMAP, HYBRID
-							l = new L.Google('ROADMAP');
-						}
-						if (scope.layersToLoad[i].code == 'OSM')
-						{
-							l = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-						}
-						if (l != null)
-						{
-							layers[scope.layersToLoad[i]['title']] = l;
-							scope.map.addLayer(l);
-							nbLayers++;
-						}
+					var l = null;
+					if (scope.titleLayer == 'GOOGLE') {
+						l = new L.Google('ROADMAP');
+					} else if (scope.titleLayer == 'OSM') {
+						l = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
 					}
-					if (nbLayers > 1)
-					{
-						scope.map.addControl(new L.Control.Layers( layers, {}));
+					if (l != null) {
+						scope.map.addLayer(l);
 					}
 				};
 
@@ -164,19 +136,27 @@
 				};
 
 				scope.updateMarkers = function() {
-					var i, latCenter = 0, longCenter = 0, dataLength;
+					var i,dataLength;
 
 					scope.removeMarkers();
 					dataLength = scope.data.length;
-
-					for(i=0; i<dataLength; i++) {
-						latCenter = latCenter + scope.data[i].latitude;
-						longCenter = longCenter + scope.data[i].longitude;
-						scope.drawMarkerToMap(scope.data[i], i);
+					if (!dataLength) {
+						return;
 					}
 
-					if (dataLength > 0) {
-						scope.map.fitBounds(scope.bounds);
+					var prCode = scope.preSelectedRelay ? scope.preSelectedRelay.code : null, selectedIndex = false;
+
+					for (i = 0; i < dataLength; i++) {
+						scope.drawMarkerToMap(scope.data[i], i);
+						if (scope.data[i].code == prCode) {
+							selectedIndex = i;
+						}
+					}
+
+					scope.map.fitBounds(scope.bounds);
+
+					if (selectedIndex !== false) {
+						scope.selectRelay(selectedIndex);
 					}
 				};
 
@@ -298,10 +278,11 @@
 				scope.$watch('shippingModeInfo', function(shippingModeInfo) {
 					if (shippingModeInfo) {
 						// Init display
-						scope.layersToLoad = shippingModeInfo.editor.layers;
+						scope.titleLayer = shippingModeInfo.editor.titleLayer;
 						scope.defaultLatitude = shippingModeInfo.editor.defaultLatitude;
 						scope.defaultLongitude = shippingModeInfo.editor.defaultLongitude;
 						scope.defaultZoom = shippingModeInfo.editor.defaultZoom;
+						scope.preSelectedRelay = null;
 
 						var launchSearch = false;
 						if (scope.shippingMode.id == shippingModeInfo.common.id)  {
@@ -309,6 +290,7 @@
 							if (scope.shippingMode.options && scope.shippingMode.options.relay) {
 								var relay = scope.shippingMode.options.relay;
 								if (relay.searchAtPosition) {
+									scope.preSelectedRelay = relay;
 									scope.currentPosition = relay.searchAtPosition;
 									if (relay.searchAtPosition.latitude) {
 										scope.defaultLatitude = relay.searchAtPosition.latitude;
@@ -317,6 +299,7 @@
 									}
 								}
 								if (relay.searchAtAddress) {
+									scope.preSelectedRelay = relay;
 									scope.currentAddress = relay.searchAtAddress;
 									if (scope.currentAddress.country && scope.currentAddress.zipCode) {
 										launchSearch = true;

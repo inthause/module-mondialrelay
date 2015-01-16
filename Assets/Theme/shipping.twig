@@ -50,7 +50,7 @@
 				<div data-ng-hide="loading">
 					<div data-ng-show="data.length == 0"
 						class="text-center">{{ i18n('m.rbs.mondialrelay.front.no_data', ['ucf']) }}</div>
-					<div data-ng-show="data.length > 0" class="list-group" style="max-height: 360px; overflow: auto" id="mondialRelayList">
+					<div data-ng-show="data.length > 0" class="list-group" style="max-height: 500px; overflow: auto" id="mondialRelayList">
 						<a data-ng-repeat="relay in data" href="javascript:" class="list-group-item"
 							data-ng-class="{active: $index == selectedIndex}" data-ng-click="selectRelay($index)" id="point(=$index=)">
 							<address class="no-bottom-margin">
@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		<div class="col-xs-12 col-sm-6 col-md-8">
-			<div id="ShippingMap-(= shippingModeInfo.common.id =)" style="min-height: 360px"></div>
+			<div id="ShippingMap-(= shippingModeInfo.common.id =)" style="min-height: 500px"></div>
 		</div>
 	</div>
 </div>

@@ -123,7 +123,7 @@ class MondialrelayShippingManager
 									continue;
 								}
 
-								$point = new \Rbs\Geo\Map\Point();
+								$point = new \Rbs\Geo\Map\Point(null);
 								$point->setTitle(trim($item->LgAdr1));
 								$point->setCode($item->Num);
 								$point->setLatitude(floatval(str_replace(',', '.', $item->Latitude)));

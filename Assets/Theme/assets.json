@@ -1,7 +1,8 @@
 {
 	"jsCollections" : {
 		"shippingMode":[
-			"Theme/Rbs/Base/Rbs_Mondialrelay/js/shipping-mondialrelay.js"
+			"Theme/Rbs/Base/Rbs_Mondialrelay/js/shipping-mondialrelay.js",
+			"Theme/Rbs/Base/Rbs_Geo/js/map-api.js"
 		]
 	}
 }

@@ -29,7 +29,7 @@ class Mode extends \Compilation\Rbs\Mondialrelay\Documents\Mode
 		parent::onDefaultGetModeData($event);
 		$modeData = $event->getParam('modeData');
 		$modeData['editor'] = [
-			'layers' => [['title' => 'OpenStreetMap', 'code' => 'OSM']],
+			'titleLayer' => 'OSM',
 			'defaultLatitude' => 48.856578,
 			'defaultLongitude' => 2.351828,
 			'defaultZoom' => 11
